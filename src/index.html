@@ -17,7 +17,21 @@
     </style>
 </head>
 <body>
+<script>
+// Fonction simple pour simuler le changement de page
+function showSection(sectionId) {
+    // On cache toutes les sections
+    document.getElementById('choice-section').style.display = 'none';
+    document.getElementById('insertion-section').style.display = 'none';
+    document.getElementById('profile-section').style.display = 'none';
+    
+    // On affiche seulement celle demandée
+    document.getElementById(sectionId).style.display = 'block';
+}
 
+// Au chargement, on ne montre que la liste des Tricounts
+window.onload = () => showSection('choice-section');
+</script>
 <div class="container py-4">
     <header class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-primary">Divided</h2>
