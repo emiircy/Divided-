@@ -3,108 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divided - Gestion de dépenses</title>
+    <title>Divided - Gestion de frais</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --divided-blue: #007bff; --bg-gray: #f8f9fa; }
-        body { background-color: var(--bg-gray); font-family: 'Segoe UI', sans-serif; color: #333; padding-bottom: 70px; }
-        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        .btn-blue { background-color: var(--divided-blue); color: white; border-radius: 20px; padding: 10px 20px; border: none; }
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #ddd; padding: 10px 0; }
-        .nav-item { text-align: center; color: #aaa; text-decoration: none; font-size: 12px; }
-        .nav-item.active { color: var(--divided-blue); }
-        .badge-active { background-color: #e6fcf5; color: #20c997; border-radius: 10px; padding: 5px 10px; font-size: 12px; }
+        :root { 
+            --divided-blue: #007bff; 
+            --bg-gray: #f8f9fa; 
+        }
+        body { background-color: var(--bg-gray); font-family: 'Segoe UI', sans-serif; color: #333; display: flex; min-height: 100vh; margin: 0; }
+        
+        .sidebar-right {
+            width: 95px; background: white; border-left: 1px solid #ddd;
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 40px; position: fixed; right: 0; height: 100vh; z-index: 1000;
+        }
+
+        .main-content { flex: 1; margin-right: 95px; padding: 40px 20px; }
+        
+        .app-title { font-size: 3.5rem; font-weight: 800; color: var(--divided-navy); text-align: center; margin-bottom: 50px; cursor: pointer; }
+        
+        .card { border: none; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; transition: 0.3s; position: relative; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        
+        .top-right-actions { 
+            position: absolute; top: 20px; right: 20px; 
+            display: flex; align-items: center; gap: 10px; z-index: 10; 
+        }
+
+        .btn-option { 
+            background: #eee; border: none; border-radius: 50%; 
+            width: 32px; height: 32px; color: #666; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; font-size: 0.9rem; 
+        }
+        .btn-option:hover { background: #ddd; }
+
+        .btn-blue { background-color: var(--divided-blue); color: white; border-radius: 25px; border: none; padding: 12px 30px; font-weight: bold; }
+        .btn-add-group { 
+            background-color: var(--divided-blue); color: white; border-radius: 50%; width: 45px; height: 45px; 
+            border: none; font-weight: bold; font-size: 1.6rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .btn-add-group.active { transform: rotate(45deg); background-color: #dc3545; }
+        
+        .section-header-title { color: var(--divided-blue); font-weight: 800; font-size: 1.8rem; margin: 0; }
+        
+        .nav-item { text-align: center; color: #bbb; text-decoration: none; font-size: 13px; cursor: pointer; margin-bottom: 45px; width: 100%; transition: 0.3s; }
+        .nav-item:hover { color: var(--divided-blue); }
+        .nav-item.active { color: var(--divided-blue); font-weight: bold; }
+        .nav-logout { margin-top: auto; padding-bottom: 40px; color: #dc3545 !important; }
+        
+        .badge-active { background-color: #e6fcf5; color: #20c997; border-radius: 12px; padding: 6px 12px; font-size: 12px; font-weight: 600; }
+        .badge-closed { background-color: #f1f3f5; color: #868e96; border-radius: 12px; padding: 6px 12px; font-size: 12px; font-weight: 600; border: 1px solid #dee2e6; }
+        
+        .expense-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .expense-item:last-child { border-bottom: none; }
+
+        label { font-weight: 600; margin-bottom: 10px; color: #495057; display: block; }
+        section { display: none; max-width: 700px; margin: 0 auto; } 
+        hr { opacity: 0.1; margin: 20px 0; }
+
+        #quick-add-group { display: none; margin-bottom: 30px; border: 2px dashed var(--divided-blue); background-color: #fff; }
     </style>
 </head>
 <body>
-<script>
-// Fonction simple pour simuler le changement de page
-function showSection(sectionId) {
-    // On cache toutes les sections
-    document.getElementById('choice-section').style.display = 'none';
-    document.getElementById('insertion-section').style.display = 'none';
-    document.getElementById('profile-section').style.display = 'none';
-    
-    // On affiche seulement celle demandée
-    document.getElementById(sectionId).style.display = 'block';
-}
 
-// Au chargement, on ne montre que la liste des Tricounts
-window.onload = () => showSection('choice-section');
-</script>
-<div class="container py-4">
-    <header class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary">Divided</h2>
-    </header>
+<div class="main-content">
+    <div class="container">
+        <h1 class="app-title" onclick="showSection('choice-section')">Divided</h1>
 
-    <section id="choice-section">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold">Mes Tricounts</h5>
-            <button class="btn btn-blue btn-sm">+</button>
-        </div>
-        
-        <div class="card p-3">
-            <div class="d-flex justify-content-between">
-                <h6 class="fw-bold">Vacances été 2024</h6>
-                <span class="badge-active">● Actif</span>
+        <section id="choice-section" style="display: block;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-header-title">Mes Tricounts</h2>
+                <button type="button" id="toggle-btn" class="btn-add-group" onclick="toggleQuickAdd()">+</button>
             </div>
-            <p class="text-muted small mb-1">👥 5 participants</p>
-            <div class="progress mb-2" style="height: 8px;">
-                <div class="progress-bar w-75" role="progressbar"></div>
-            </div>
-            <div class="d-flex justify-content-between small">
-                <span>Total dépenses: 847.50€</span>
-                <span class="text-success fw-bold">+125.30€</span>
-            </div>
-        </div>
-    </section>
 
-    <section id="insertion-section" class="mt-5">
-        <h5 class="fw-bold mb-3 text-center">Nouvelle dépense</h5>
-        <div class="card p-4">
-            <div class="mb-3">
-                <label class="form-label text-muted small">Nom de la dépense</label>
-                <input type="text" class="form-control border-0 bg-light" placeholder="Ex: Restaurant">
+            <div id="quick-add-group" class="card p-4">
+                <h5 class="fw-bold mb-3 text-primary">Créer un nouveau groupe</h5>
+                <form id="groupForm" onsubmit="addNewGroup(event)">
+                    <div class="mb-3">
+                        <label for="new_group_name">Nom du groupe</label>
+                        <input type="text" id="new_group_name" class="form-control border-0 bg-light p-3" placeholder="Ex: Voyage Rome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="invite_participants">Inviter des participants (pseudos)</label>
+                        <input type="text" id="invite_participants" class="form-control border-0 bg-light p-3" placeholder="Youri, Julian...">
+                    </div>
+                    <button type="submit" class="btn btn-blue w-100 rounded-pill p-3">Enregistrer le groupe</button>
+                </form>
             </div>
-            <div class="mb-3">
-                <label class="form-label text-muted small">Montant</label>
-                <input type="number" class="form-control border-0 bg-light" placeholder="0.00 €">
-            </div>
-            <div class="mb-3 text-muted small">Participants</div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" checked> <label class="form-check-label">Youri</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" checked> <label class="form-check-label">Julian</label></div>
             
-            <div class="d-flex gap-2 mt-4">
-                <button class="btn btn-light w-50 rounded-pill">Annuler</button>
-                <button class="btn btn-blue w-50 rounded-pill">Ajouter</button>
-            </div>
-        </div>
-    </section>
+            <div id="groups-container">
+                <div class="card p-4" id="group-1">
+                    <div class="top-right-actions">
+                        <span id="badge-1" class="badge-active">● Actif</span>
+                        <div class="dropdown">
+                            <button class="btn-option" data-bs-toggle="dropdown">⚙️</button>
+                            <ul class="dropdown-menu shadow border-0 text-end">
+                                <li><a class="dropdown-item" href="#" onclick="editGroup('Vacances été 2024')">Modifier</a></li>
+                                <li><a class="dropdown-item" id="status-toggle-1" href="#" onclick="toggleStatus(1)">Clôturer</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteGroup('group-1')">Supprimer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="fw-bold mb-1">Vacances été 2024</h5>
+                        <p class="text-muted small mb-0">👥 5 participants</p>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <span class="small text-muted" id="total-expense-1">Dépenses : 847.50€</span>
+                        <div class="text-end"><span class="text-success fw-bold fs-5">On vous doit 125.30€</span></div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section')">Voir le détail</button>
+                </div>
 
-    <section id="profile-section" class="mt-5">
-        <h5 class="fw-bold mb-3">Mon Profil</h5>
-        <div class="card p-4">
-            <div class="mb-3">
-                <label class="form-label small">IBAN</label>
-                <input type="text" class="form-control" value="BE00 1234 5678 9012">
+                <div class="card p-4 shadow-none border" id="group-2" style="background-color: #fafafa; opacity: 0.85;">
+                    <div class="top-right-actions">
+                        <span id="badge-2" class="badge-closed">● Clôturé</span>
+                        <div class="dropdown">
+                            <button class="btn-option" data-bs-toggle="dropdown">⚙️</button>
+                            <ul class="dropdown-menu shadow border-0 text-end">
+                                <li><a class="dropdown-item" href="#" onclick="editGroup('Coloc Bruxelles')">Modifier</a></li>
+                                <li><a class="dropdown-item" id="status-toggle-2" href="#" onclick="toggleStatus(2)">Réactiver</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteGroup('group-2')">Supprimer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="fw-bold mb-1 text-secondary">Coloc Bruxelles</h5>
+                        <p class="text-muted small mb-0">👥 3 participants</p>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <span class="small text-muted" id="total-expense-2">Dépenses : 312.00€</span>
+                        <div class="text-end"><span class="text-danger fw-bold fs-5">Vous devez 45.20€</span></div>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section')">Consulter l'archive</button>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label small">Langue préférée</label>
-                <select class="form-select">
-                    <option value="fr">Français</option>
-                    <option value="en">English</option>
-                </select>
+        </section>
+
+        <section id="insertion-section">
+            <h2 class="section-header-title text-center mb-4">Nouvelle dépense</h2>
+            <div class="card p-4">
+                <form id="expenseForm" onsubmit="addNewExpense(event, 1)">
+                    <div class="mb-4">
+                        <label for="expense_name">Libellé</label>
+                        <input type="text" id="expense_name" class="form-control form-control-lg border-0 bg-light p-3" placeholder="Ex: Restaurant..." required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="amount">Montant (€)</label>
+                        <input type="number" id="amount" step="0.01" class="form-control form-control-lg border-0 bg-light p-3" placeholder="0.00" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="paid_by">Payé par</label>
+                        <select id="paid_by" class="form-select form-select-lg border-0 bg-light p-3">
+                            <option value="Youri" selected>Youri (Moi)</option>
+                            <option value="Julian">Julian</option>
+                            <option value="Anne-Marie">Anne-Marie</option>
+                            <option value="Thomas">Thomas</option>
+                            <option value="Sarah">Sarah</option>
+                        </select>
+                    </div>
+                    <div class="d-flex gap-3 mt-5">
+                        <button type="button" class="btn btn-light w-50 rounded-pill py-3" onclick="showSection('detail-section')">Annuler</button>
+                        <button type="submit" class="btn-blue w-50 py-3">Ajouter la dépense</button>
+                    </div>
+                </form>
             </div>
-            <button class="btn btn-dark w-100 rounded-pill">Sauvegarder</button>
-        </div>
-    </section>
+        </section>
+
+        <section id="detail-section">
+            <div class="d-flex align-items-center mb-4 justify-content-between">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-light rounded-circle me-3" onclick="showSection('choice-section')">←</button>
+                    <h2 class="section-header-title">Historique des dépenses</h2>
+                </div>
+                <button class="btn btn-blue btn-sm rounded-pill px-4" onclick="showSection('insertion-section')">+ Ajouter</button>
+            </div>
+            <div class="card p-4" id="expenses-list">
+                <div class="expense-item d-flex justify-content-between align-items-center">
+                    <div><div class="fw-bold">Airbnb Barcelone</div><div class="small text-muted">Payé par <strong>Julian</strong></div></div>
+                    <div class="text-end"><div class="fw-bold">620.00 €</div><div class="small text-muted">15/03</div></div>
+                </div>
+                <div class="expense-item d-flex justify-content-between align-items-center">
+                    <div><div class="fw-bold">Restaurant "Le Port"</div><div class="small text-muted">Payé par <strong>Youri</strong></div></div>
+                    <div class="text-end"><div class="fw-bold">142.00 €</div><div class="small text-muted">Hier</div></div>
+                </div>
+                <div class="expense-item d-flex justify-content-between align-items-center">
+                    <div><div class="fw-bold">Courses Carrefour</div><div class="small text-muted">Payé par <strong>Anne-Marie</strong></div></div>
+                    <div class="text-end"><div class="fw-bold">85.50 €</div><div class="small text-muted">Hier</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="profile-section">
+            <h2 class="section-header-title text-center mb-4">Mon Profil</h2>
+            <div class="card p-4">
+                <form action="" method="POST">
+                    <div class="mb-3"><label>Nom complet</label><input type="text" class="form-control p-3" value="Youri"></div>
+                    <div class="mb-3"><label>IBAN</label><input type="text" class="form-control p-3" value="BE00 0000 0000 0000"></div>
+                    <button type="submit" class="btn btn-dark w-100 rounded-pill py-3">Mettre à jour</button>
+                </form>
+            </div>
+        </section>
+    </div>
 </div>
 
-<nav class="nav-bottom d-flex justify-content-around">
-    <a href="#" class="nav-item"><div class="small">🏠</div>Home</a>
-    <a href="#" class="nav-item active"><div class="small">📂</div>Tricounts</a>
-    <a href="#" class="nav-item"><div class="small">👤</div>Profile</a>
-</nav>
+<aside class="sidebar-right">
+    <div id="nav-home" class="nav-item active" onclick="showSection('choice-section')">🏠<br>Home</div>
+    <div id="nav-tricount" class="nav-item" onclick="showSection('insertion-section')">📂<br>Dépenses</div>
+    <div id="nav-profile" class="nav-item" onclick="showSection('profile-section')">👤<br>Profil</div>
+    <div class="nav-item nav-logout" onclick="logout()">🚪<br>Sortir</div>
+</aside>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    let groupTotals = { 1: 847.50, 2: 312.00 };
+
+    function toggleQuickAdd() {
+        const form = document.getElementById('quick-add-group');
+        form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+        document.getElementById('toggle-btn').classList.toggle('active');
+    }
+
+    function deleteGroup(id) {
+        if(confirm("Supprimer ce groupe ?")) document.getElementById(id).remove();
+    }
+
+    function toggleStatus(id) {
+        const badge = document.getElementById('badge-' + id);
+        const toggleBtn = document.getElementById('status-toggle-' + id);
+        const card = document.getElementById('group-' + id);
+        if (badge.classList.contains('badge-active')) {
+            badge.className = "badge-closed"; badge.innerText = "● Clôturé"; toggleBtn.innerText = "Réactiver";
+            card.style.opacity = "0.85"; card.style.backgroundColor = "#fafafa";
+        } else {
+            badge.className = "badge-active"; badge.innerText = "● Actif"; toggleBtn.innerText = "Clôturer";
+            card.style.opacity = "1"; card.style.backgroundColor = "#fff";
+        }
+    }
+
+    function addNewGroup(event) {
+        event.preventDefault();
+        const name = document.getElementById('new_group_name').value;
+        const participantsRaw = document.getElementById('invite_participants').value;
+        const nb = participantsRaw.split(',').filter(p => p.trim() !== "").length + 1;
+        const id = Date.now();
+        groupTotals[id] = 0.00;
+
+        const newCard = `
+            <div class="card p-4" id="group-${id}">
+                <div class="top-right-actions">
+                    <span id="badge-${id}" class="badge-active">● Actif</span>
+                    <div class="dropdown"><button class="btn-option" data-bs-toggle="dropdown">⚙️</button>
+                        <ul class="dropdown-menu shadow border-0 text-end">
+                            <li><a class="dropdown-item" href="#" onclick="editGroup('${name}')">Modifier</a></li>
+                            <li><a class="dropdown-item" id="status-toggle-${id}" href="#" onclick="toggleStatus('${id}')">Clôturer</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="deleteGroup('group-${id}')">Supprimer</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mb-2"><h5 class="fw-bold mb-1">${name}</h5><p class="text-muted small mb-0">👥 ${nb} participants</p></div>
+                <hr><div class="d-flex justify-content-between align-items-end">
+                    <span class="small text-muted" id="total-expense-${id}">Dépenses : 0.00€</span>
+                    <span class="text-success fw-bold fs-5">On vous doit 0.00€</span>
+                </div>
+                <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section')">Voir le détail</button>
+            </div>`;
+        document.getElementById('groups-container').insertAdjacentHTML('afterbegin', newCard);
+        document.getElementById('groupForm').reset(); toggleQuickAdd();
+    }
+
+    function addNewExpense(event, groupId) {
+        event.preventDefault();
+        const expenseName = document.getElementById('expense_name').value;
+        const expenseAmount = parseFloat(document.getElementById('amount').value);
+        const buyerName = document.getElementById('paid_by').value;
+        
+        const expenseList = document.getElementById('expenses-list');
+        const newExpenseHtml = `
+            <div class="expense-item d-flex justify-content-between align-items-center">
+                <div><div class="fw-bold">${expenseName}</div><div class="small text-muted">Payé par <strong>${buyerName}</strong></div></div>
+                <div class="text-end"><div class="fw-bold">${expenseAmount.toFixed(2)} €</div><div class="small text-muted">À l'instant</div></div>
+            </div>`;
+        
+        expenseList.insertAdjacentHTML('afterbegin', newExpenseHtml);
+        groupTotals[groupId] += expenseAmount;
+        document.getElementById('total-expense-' + groupId).innerText = "Dépenses : " + groupTotals[groupId].toFixed(2) + "€";
+        
+        document.getElementById('expenseForm').reset();
+        showSection('detail-section');
+    }
+
+    function logout() { if(confirm("Se déconnecter ?")) alert("Déconnexion..."); }
+
+    function editGroup(name) {
+        toggleQuickAdd();
+        document.getElementById('new_group_name').value = name;
+        document.getElementById('new_group_name').focus();
+    }
+
+    function showSection(sectionId) {
+        document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+        document.getElementById(sectionId).style.display = 'block';
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        if(sectionId === 'choice-section' || sectionId === 'detail-section') document.getElementById('nav-home').classList.add('active');
+        if(sectionId === 'insertion-section') document.getElementById('nav-tricount').classList.add('active');
+        if(sectionId === 'profile-section') document.getElementById('nav-profile').classList.add('active');
+        window.scrollTo(0, 0);
+    }
+</script>
 
 </body>
 </html>
