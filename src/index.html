@@ -114,7 +114,7 @@
                         <span class="small text-muted" id="total-expense-1">Dépenses : 847.50€</span>
                         <div class="text-end"><span class="text-success fw-bold fs-5">On vous doit 125.30€</span></div>
                     </div>
-                    <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section')">Voir le détail</button>
+                    <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section', 1)">Voir le détail</button>
                 </div>
 
                 <div class="card p-4 shadow-none border" id="group-2" style="background-color: #fafafa; opacity: 0.85;">
@@ -139,7 +139,7 @@
                         <span class="small text-muted" id="total-expense-2">Dépenses : 312.00€</span>
                         <div class="text-end"><span class="text-danger fw-bold fs-5">Vous devez 45.20€</span></div>
                     </div>
-                    <button type="button" class="btn btn-outline-secondary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section')">Consulter l'archive</button>
+                    <button type="button" class="btn btn-outline-secondary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section', 2)">Consulter l'archive</button>
                 </div>
             </div>
         </section>
@@ -147,7 +147,15 @@
         <section id="insertion-section">
             <h2 class="section-header-title text-center mb-4">Nouvelle dépense</h2>
             <div class="card p-4">
-                <form id="expenseForm" onsubmit="addNewExpense(event, 1)">
+                <form id="expenseForm" onsubmit="addNewExpense(event)">
+                    <div class="mb-4">
+                        <label for="select_group">Choisir le groupe</label>
+                        <select id="select_group" class="form-select form-select-lg border-0 bg-light p-3">
+                            <option value="1">Vacances été 2024</option>
+                            <option value="2">Coloc Bruxelles</option>
+                        </select>
+                    </div>
+
                     <div class="mb-4">
                         <label for="expense_name">Libellé</label>
                         <input type="text" id="expense_name" class="form-control form-control-lg border-0 bg-light p-3" placeholder="Ex: Restaurant..." required>
@@ -167,7 +175,7 @@
                         </select>
                     </div>
                     <div class="d-flex gap-3 mt-5">
-                        <button type="button" class="btn btn-light w-50 rounded-pill py-3" onclick="showSection('detail-section')">Annuler</button>
+                        <button type="button" class="btn btn-light w-50 rounded-pill py-3" onclick="showSection('choice-section')">Annuler</button>
                         <button type="submit" class="btn-blue w-50 py-3">Ajouter la dépense</button>
                     </div>
                 </form>
@@ -270,16 +278,25 @@
                 <div class="mb-2"><h5 class="fw-bold mb-1">${name}</h5><p class="text-muted small mb-0">👥 ${nb} participants</p></div>
                 <hr><div class="d-flex justify-content-between align-items-end">
                     <span class="small text-muted" id="total-expense-${id}">Dépenses : 0.00€</span>
-                    <span class="text-success fw-bold fs-5">On vous doit 0.00€</span>
+                    <span class="text-success fw-bold fs-5">0.00€</span>
                 </div>
-                <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section')">Voir le détail</button>
+                <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold mt-4" onclick="showSection('detail-section', '${id}')">Voir le détail</button>
             </div>`;
         document.getElementById('groups-container').insertAdjacentHTML('afterbegin', newCard);
+
+        // AJOUTER LE NOUVEAU GROUPE DANS LA LISTE DÉROULANTE DE DÉPENSE
+        const select = document.getElementById('select_group');
+        const option = document.createElement('option');
+        option.value = id;
+        option.text = name;
+        select.add(option);
+
         document.getElementById('groupForm').reset(); toggleQuickAdd();
     }
 
-    function addNewExpense(event, groupId) {
+    function addNewExpense(event) {
         event.preventDefault();
+        const groupId = document.getElementById('select_group').value; // RÉCUPÈRE LE GROUPE SÉLECTIONNÉ
         const expenseName = document.getElementById('expense_name').value;
         const expenseAmount = parseFloat(document.getElementById('amount').value);
         const buyerName = document.getElementById('paid_by').value;
@@ -292,6 +309,8 @@
             </div>`;
         
         expenseList.insertAdjacentHTML('afterbegin', newExpenseHtml);
+        
+        // MISE À JOUR DU TOTAL DU GROUPE SÉLECTIONNÉ
         groupTotals[groupId] += expenseAmount;
         document.getElementById('total-expense-' + groupId).innerText = "Dépenses : " + groupTotals[groupId].toFixed(2) + "€";
         
@@ -307,9 +326,15 @@
         document.getElementById('new_group_name').focus();
     }
 
-    function showSection(sectionId) {
+    function showSection(sectionId, groupId = null) {
         document.querySelectorAll('section').forEach(s => s.style.display = 'none');
         document.getElementById(sectionId).style.display = 'block';
+
+        // Si on vient d'un groupe précis, on pré-sélectionne le groupe dans la liste déroulante
+        if(groupId) {
+            document.getElementById('select_group').value = groupId;
+        }
+
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         if(sectionId === 'choice-section' || sectionId === 'detail-section') document.getElementById('nav-home').classList.add('active');
         if(sectionId === 'insertion-section') document.getElementById('nav-tricount').classList.add('active');
