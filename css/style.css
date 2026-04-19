@@ -10,12 +10,11 @@
 /* RESET & BASE */
 html { 
     scroll-behavior: smooth; 
-    /* Ajoute une marge de 100px au-dessus des sections quand on clique sur un lien */
     scroll-padding-top: 100px; 
 }
 body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); margin: 0; padding: 0; }
 
-/* NAVIGATION */
+/* --- NAVIGATION LANDING --- */
 .landing-nav { 
     position: fixed; 
     top: 0; 
@@ -31,13 +30,13 @@ body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-
 .nav-links-center a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; transition: 0.3s; }
 .nav-links-center a:hover { color: var(--primary); }
 
-/* BOUTONS */
-.btn-brand { background-color: var(--primary); color: white; border-radius: 50px; padding: 12px 28px; font-weight: 600; border: none; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; }
+/* --- BOUTONS --- */
+.btn-brand { background-color: var(--primary); color: white; border-radius: 50px; padding: 12px 28px; font-weight: 600; border: none; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .btn-brand:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); color: white; }
 .btn-outline-custom { color: var(--primary); border: 2px solid var(--primary); border-radius: 50px; padding: 12px 28px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; transition: 0.3s; background: transparent; }
 .btn-outline-custom:hover { background-color: var(--primary); color: white; }
 
-/* HERO & PARTNERS */
+/* --- HERO & PARTNERS --- */
 .hero-section { padding: 160px 0 80px 0; text-align: center; background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%); }
 .hero-title { font-size: 4rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 20px; line-height: 1.1; }
 .hero-subtitle { color: var(--text-muted); font-size: 1.25rem; max-width: 700px; margin: 0 auto 40px auto; }
@@ -46,7 +45,7 @@ body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-
 .partners-title { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); letter-spacing: 2px; margin-bottom: 20px; opacity: 0.8; }
 .partner-logo { font-weight: 800; color: #94a3b8; font-size: 1.4rem; opacity: 0.6; }
 
-/* FEATURES */
+/* --- FEATURES --- */
 .section-title { font-weight: 800; font-size: 2.5rem; }
 @media (min-width: 992px) { 
     .single-line-force { white-space: nowrap !important; display: inline-block; max-width: none !important; } 
@@ -54,8 +53,8 @@ body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-
 .feature-card-modern { background: white; padding: 40px 30px; border-radius: 24px; border: 1px solid #e2e8f0; height: 100%; transition: 0.3s; }
 .feature-icon-box { width: 64px; height: 64px; background-color: #eef2ff; color: var(--primary); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; }
 
-/* FAQ */
-.custom-faq .accordion-item { border-radius: 20px !important; overflow: hidden; margin-bottom: 1rem; }
+/* --- FAQ --- */
+.custom-faq .accordion-item { border-radius: 20px !important; overflow: hidden; margin-bottom: 1rem; border: none; }
 .custom-faq .accordion-button { padding: 25px; font-size: 1.1rem; background-color: white; color: var(--text-main); box-shadow: none !important; }
 .custom-faq .accordion-button:not(.collapsed) { color: var(--primary); background-color: white; }
 .custom-faq .accordion-body { padding: 0 25px 25px 25px; font-size: 1rem; }
@@ -63,84 +62,72 @@ body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-
 .custom-faq .accordion-item:hover .accordion-button { color: var(--primary) !important; font-weight: 800 !important; background-color: #f8fafc;}
 .custom-faq .accordion-item:hover .accordion-button::after { transform: rotate(-180deg);}
 
-/* FOOTER */
-.main-footer {
-    background-color: var(--footer-bg);
-    padding: 100px 0 20px 0;
-}
-.footer-text-light {
-    color: #cbd5e1; 
-}
-.footer-heading {
-    font-weight: 700;
-    margin-bottom: 30px;
-    font-size: 1.1rem;
-}
-.footer-links li {
-    margin-bottom: 12px;
-}
-.footer-links a {
-    color: #94a3b8; 
-    text-decoration: none;
-    transition: 0.3s;
-}
-.footer-links a:hover {
-    color: white;
-    padding-left: 5px;
+/* --- FOOTER --- */
+.main-footer { background-color: var(--footer-bg); padding: 100px 0 20px 0; }
+.footer-text-light { color: #cbd5e1; }
+.footer-heading { font-weight: 700; margin-bottom: 30px; font-size: 1.1rem; color: white; }
+.footer-links li { margin-bottom: 12px; list-style: none; padding: 0; }
+.footer-links a { color: #94a3b8; text-decoration: none; transition: 0.3s; }
+.footer-links a:hover { color: white; padding-left: 5px; }
+.footer-link-bottom { color: #94a3b8; font-size: 0.85rem; transition: 0.3s ease; text-decoration: underline !important; }
+.footer-link-bottom:hover { color: white; }
+
+/* --- NEWSLETTER --- */
+.newsletter-box input { background: white !important; color: var(--text-main) !important; border: none; padding: 12px 20px; border-radius: 12px 0 0 12px; font-weight: 600; }
+.newsletter-box input:focus { border: 2px solid var(--primary) !important; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2) !important; outline: none; }
+.newsletter-box .btn { border-radius: 0 12px 12px 0; padding: 0 25px; background-color: var(--primary); border: none; font-weight: 600; color: white; }
+
+/* ==========================================
+   DASHBOARD SPECIFIC STYLES
+   ========================================== */
+
+.dashboard-wrapper { background-color: #ffffff; min-height: 100vh; }
+
+.dashboard-nav { 
+    background: white; 
+    border-bottom: 1px solid #f1f5f9; 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
 }
 
-/* NEWSLETTER FIX */
-.newsletter-box input {
-    background: white !important;
-    color: var(--text-main) !important;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 12px 0 0 12px;
-    font-weight: 600;
-}
-.newsletter-box input::placeholder {
-    color: #94a3b8;
-    font-weight: 400;
-}
-.newsletter-box input:focus {
-    background: white !important;
-    color: var(--text-main) !important;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-    outline: none;
-}
-.newsletter-box .btn {
-    border-radius: 0 12px 12px 0;
-    padding: 0 25px;
-    background-color: #4f46e5;
-    border: none;
-    font-weight: 600;
-    color: white;
+.nav-tabs-container { background: #f1f5f9; padding: 5px; border-radius: 14px; }
+
+.tab-btn { 
+    border: none; 
+    background: transparent; 
+    padding: 8px 20px; 
+    border-radius: 10px; 
+    font-weight: 600; 
+    color: var(--text-muted); 
+    transition: 0.3s; 
 }
 
-/* ACCESSIBILITÉ : Style de focus pour le champ Newsletter */
-.newsletter-box input:focus {
-    background: white !important;
-    color: var(--text-main) !important;
-    /* On applique une bordure nette avec ta couleur principale */
-    border: 2px solid var(--primary) !important;
-    /* On ajoute un halo doux (ring) pour augmenter la visibilité sans écraser le design */
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2) !important;
-    outline: none; /* Supprime le contour orange/bleu par défaut des navigateurs */
-}
-/* Style pour les nouveaux liens légaux en bas de page */
-.footer-link-bottom {
-    color: #94a3b8;
-    font-size: 0.85rem;
-    transition: 0.3s ease;
-    text-decoration: underline !important; 
+.tab-btn.active { 
+    background: white; 
+    color: var(--primary); 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
 }
 
-.footer-link-bottom:hover {
-    color: white;
+.user-profile-btn { display: flex; align-items: center; cursor: pointer; padding: 5px 15px; border-radius: 50px; transition: 0.3s; }
+.user-profile-btn:hover { background: #f8fafc; }
+
+.avatar-circle { 
+    width: 35px; height: 35px; background: var(--primary); color: white; 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; 
 }
 
-/* DASHBOARD CLASSES (POUR LA SUITE) */
-.dashboard-container {
-    min-height: 100vh;
-    background-color: white;
+/* FAB (Bouton flottant) */
+.fab-btn { 
+    width: 48px; height: 48px; background-color: var(--primary); border: none; 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); 
 }
+.fab-btn:hover { transform: scale(1.1) rotate(5deg); }
+.fab-btn.btn-cancel { background-color: #ef4444 !important; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important; }
+
+/* Formulaire & Cartes */
+.create-group-form { background: #fcfdfe; border: 2px dashed #e2e8f0; border-radius: 20px; }
+.group-card { background: white; border-radius: 24px; border: 1px solid #f1f5f9; transition: 0.3s; }
+.group-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important; }

@@ -16,7 +16,7 @@
 
     <div id="app">
         
-        <nav class="landing-nav">
+        <nav v-if="!isConnected" class="landing-nav">
             <div class="container d-flex justify-content-between align-items-center">
                 <a href="#" class="brand-logo" @click.prevent="isConnected = false; openCreateGroup = false">Divided<span>.</span></a>
                 
@@ -26,7 +26,7 @@
                 </div>
                 
                 <div class="nav-actions">
-                    <button class="btn-brand shadow-sm" @click="isConnected = true; openCreateGroup = false">
+                    <button class="btn-brand shadow-sm" @click="isConnected = true; openCreateGroup = false; currentTab = 'groups'">
                         Accéder à l'App
                         <svg class="ms-2" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </button>
@@ -41,7 +41,7 @@
                     <h1 class="hero-title">Les bons comptes<br><span class="text-gradient">font les bons amis.</span></h1>
                     <p class="hero-subtitle">L'application la plus simple pour gérer les dépenses de groupe, colocations et voyages. Fini les calculs savants sur un coin de tables.</p>
                     <div class="d-flex justify-content-center gap-3">
-                        <button class="btn-brand btn-lg px-5" @click="isConnected = true; openCreateGroup = true">Créer un groupe</button>
+                        <button class="btn-brand btn-lg px-5" @click="isConnected = true; openCreateGroup = true; currentTab = 'groups'">Créer un groupe</button>
                         <a href="#features" class="btn-outline-custom btn-lg px-5">Découvrir</a>
                     </div>
                 </div>
@@ -194,19 +194,84 @@
             </footer>
         </div>
 
-        <div v-else>
-            <div class="container py-5 text-center">
-                <h2 class="mt-5">Dashboard en construction</h2>
+        <div v-else class="dashboard-wrapper">
+            
+            <nav class="dashboard-nav shadow-sm">
+                <div class="container d-flex justify-content-between align-items-center py-3">
+                    <a href="#" class="brand-logo" @click.prevent="isConnected = false">Divided<span>.</span></a>
+                    
+                    <div class="nav-tabs-container d-flex gap-2">
+                        <button @click="currentTab = 'groups'" :class="['tab-btn', { active: currentTab === 'groups' }]">Groupes</button>
+                        <button @click="currentTab = 'expense'" :class="['tab-btn', { active: currentTab === 'expense' }]">Nouvelle dépense</button>
+                    </div>
+
+                    <div class="user-profile-btn" @click="isConnected = false">
+                        <span class="me-2 fw-bold">Youri</span>
+                        <div class="avatar-circle">Y</div>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="container py-5">
                 
-                <div v-if="openCreateGroup" class="alert alert-success mt-4 p-4 border-dashed">
-                    <h4>🚀 Formulaire de création de groupe</h4>
-                    <p>Ce bloc s'affiche car vous avez cliqué sur "Créer un groupe" depuis la Landing.</p>
-                    <button class="btn btn-sm btn-outline-success" @click="openCreateGroup = false">Simuler la validation</button>
+                <div v-if="currentTab === 'groups'">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold">Mes Groupes</h2>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-muted small fw-bold">Nouveau groupe</span>
+                            <button @click="openCreateGroup = !openCreateGroup" 
+                                    :class="['fab-btn', { 'btn-cancel': openCreateGroup }]">
+                                <svg v-if="!openCreateGroup" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <svg v-else width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-if="openCreateGroup" class="create-group-form mb-4 p-4 shadow-sm">
+                        <h5 class="fw-bold mb-3">Créer un nouveau groupe</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Nom du groupe (ex: Vacances Rome)">
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select">
+                                    <option>Devise : EUR (€)</option>
+                                    <option>Devise : USD ($)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-brand w-100">Créer</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="group-card p-4 shadow-sm">
+                                <h4 class="fw-bold">Vacances Rome 🇮🇹</h4>
+                                <p class="text-muted mb-4">3 participants</p>
+                                <div class="d-flex justify-content-between align-items-end">
+                                    <div>
+                                        <span class="text-muted small">Total dépensé</span>
+                                        <div class="fw-bold fs-4">450.00€</div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">Détails</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <button class="btn btn-outline-danger mt-3" @click="isConnected = false; openCreateGroup = false">Retour Landing</button>
-            </div>
+                <div v-else-if="currentTab === 'expense'">
+                    <h2 class="fw-bold mb-4">Ajouter une dépense</h2>
+                    <div class="card p-4 border-0 shadow-sm">
+                        <p class="text-muted">Ici nous construirons le formulaire d'ajout de frais associé aux groupes.</p>
+                    </div>
+                </div>
+
+            </main>
         </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
