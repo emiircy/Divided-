@@ -54,19 +54,14 @@ body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-
 .feature-card-modern { background: white; padding: 40px 30px; border-radius: 24px; border: 1px solid #e2e8f0; height: 100%; transition: 0.3s; }
 .feature-icon-box { width: 64px; height: 64px; background-color: #eef2ff; color: var(--primary); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; }
 
-/* PRICING */
-.pricing-card { background: white; padding: 50px 40px; border-radius: 30px; border: 1px solid #e2e8f0; transition: 0.4s; }
-.pricing-card.popular { border: 2px solid var(--primary); position: relative; transform: scale(1.03); }
-.badge-popular { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 6px 20px; border-radius: 50px; font-size: 0.75rem; font-weight: 800; }
-.pricing-features li { margin-bottom: 15px; font-size: 0.95rem; color: var(--text-main); font-weight: 500; }
-.check-icon { color: #10b981; font-weight: bold; margin-right: 10px; }
-.cross-icon { color: #ef4444; font-weight: bold; margin-right: 12px; }
-
 /* FAQ */
-.custom-faq .accordion-item { border: none; border-radius: 20px !important; overflow: hidden; margin-bottom: 1rem; }
+.custom-faq .accordion-item { border-radius: 20px !important; overflow: hidden; margin-bottom: 1rem; }
 .custom-faq .accordion-button { padding: 25px; font-size: 1.1rem; background-color: white; color: var(--text-main); box-shadow: none !important; }
 .custom-faq .accordion-button:not(.collapsed) { color: var(--primary); background-color: white; }
 .custom-faq .accordion-body { padding: 0 25px 25px 25px; font-size: 1rem; }
+.custom-faq .accordion-item:hover .accordion-collapse { display: block; }
+.custom-faq .accordion-item:hover .accordion-button { color: var(--primary) !important; font-weight: 800 !important; background-color: #f8fafc;}
+.custom-faq .accordion-item:hover .accordion-button::after { transform: rotate(-180deg);}
 
 /* FOOTER */
 .main-footer {
@@ -116,8 +111,36 @@ body { background-color: var(--bg-body); font-family: 'Plus Jakarta Sans', sans-
 .newsletter-box .btn {
     border-radius: 0 12px 12px 0;
     padding: 0 25px;
-    background-color: #3b82f6;
+    background-color: #4f46e5;
     border: none;
     font-weight: 600;
     color: white;
+}
+
+/* ACCESSIBILITÉ : Style de focus pour le champ Newsletter */
+.newsletter-box input:focus {
+    background: white !important;
+    color: var(--text-main) !important;
+    /* On applique une bordure nette avec ta couleur principale */
+    border: 2px solid var(--primary) !important;
+    /* On ajoute un halo doux (ring) pour augmenter la visibilité sans écraser le design */
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2) !important;
+    outline: none; /* Supprime le contour orange/bleu par défaut des navigateurs */
+}
+/* Style pour les nouveaux liens légaux en bas de page */
+.footer-link-bottom {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    transition: 0.3s ease;
+    text-decoration: underline !important; 
+}
+
+.footer-link-bottom:hover {
+    color: white;
+}
+
+/* DASHBOARD CLASSES (POUR LA SUITE) */
+.dashboard-container {
+    min-height: 100vh;
+    background-color: white;
 }

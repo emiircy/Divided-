@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../css/style.css">
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
 
@@ -16,16 +18,15 @@
         
         <nav class="landing-nav">
             <div class="container d-flex justify-content-between align-items-center">
-                <a href="#" class="brand-logo">Divided<span>.</span></a>
+                <a href="#" class="brand-logo" @click.prevent="isConnected = false">Divided<span>.</span></a>
                 
                 <div class="nav-links-center d-none d-md-flex gap-4">
                     <a href="#features">Fonctionnalités</a>
-                    <a href="#pricing">Tarifs</a>
                     <a href="#faq">FAQ</a>
                 </div>
                 
                 <div class="nav-actions">
-                    <button class="btn-brand shadow-sm">
+                    <button class="btn-brand shadow-sm" @click="isConnected = true">
                         Accéder à l'App
                         <svg class="ms-2" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </button>
@@ -40,7 +41,7 @@
                     <h1 class="hero-title">Les bons comptes<br><span class="text-gradient">font les bons amis.</span></h1>
                     <p class="hero-subtitle">L'application la plus simple pour gérer les dépenses de groupe, colocations et voyages. Fini les calculs savants sur un coin de tables.</p>
                     <div class="d-flex justify-content-center gap-3">
-                        <button class="btn-brand btn-lg px-5">Commencer gratuitement</button>
+                        <button class="btn-brand btn-lg px-5" @click="isConnected = true">Commencer gratuitement</button>
                         <a href="#features" class="btn-outline-custom btn-lg px-5">Découvrir</a>
                     </div>
                 </div>
@@ -105,46 +106,6 @@
                 </div>
             </section>
 
-            <section id="pricing" class="py-5 bg-light">
-                <div class="container text-center py-5">
-                    <h2 class="section-title mb-2">Des tarifs simples</h2>
-                    <p class="text-muted mb-5">Commencez gratuitement, passez à la vitesse supérieure si besoin.</p>
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-md-5 col-lg-4">
-                            <div class="pricing-card shadow-sm h-100">
-                                <h3 class="fw-bold mb-4">Gratuit</h3>
-                                <div class="price-display mb-4">
-                                    <span class="fs-1 fw-800">0€</span><span class="text-muted">/mois</span>
-                                </div>
-                                <ul class="pricing-features list-unstyled text-start mb-5">
-                                    <li><span class="check-icon">✓</span> Jusqu'à 3 groupes actifs</li>
-                                    <li><span class="check-icon">✓</span> 10 participants max / groupe</li>
-                                    <li><span class="check-icon">✓</span> Calcul de balance basique</li>
-                                    <li class="disabled"><span class="cross-icon">✕</span> Export PDF/Excel</li>
-                                </ul>
-                                <button class="btn-outline-custom w-100">Créer un compte</button>
-                            </div>
-                        </div>
-                        <div class="col-md-5 col-lg-4">
-                            <div class="pricing-card popular shadow-lg h-100">
-                                <div class="badge-popular">LE PLUS CHOISI</div>
-                                <h3 class="fw-bold mb-4 text-primary">Premium</h3>
-                                <div class="price-display mb-4">
-                                    <span class="fs-1 fw-800">2.99€</span><span class="text-muted">/mois</span>
-                                </div>
-                                <ul class="pricing-features list-unstyled text-start mb-5">
-                                    <li><span class="check-icon">✓</span> Groupes illimités</li>
-                                    <li><span class="check-icon">✓</span> Participants illimités</li>
-                                    <li><span class="check-icon">✓</span> Ajout de photos de tickets</li>
-                                    <li><span class="check-icon">✓</span> Remboursement via Paypal/Lydia</li>
-                                </ul>
-                                <button class="btn-brand w-100">Essayer 14 jours</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <section id="faq" class="py-5 my-5">
                 <div class="container" style="max-width: 800px;">
                     <div class="text-center mb-5">
@@ -202,7 +163,6 @@
                             <h5 class="footer-heading text-white">Produit</h5>
                             <ul class="list-unstyled footer-links">
                                 <li><a href="#features">Fonctionnalités</a></li>
-                                <li><a href="#pricing">Tarifs</a></li>
                                 <li><a href="#">Sécurité</a></li>
                             </ul>
                         </div>
@@ -210,7 +170,6 @@
                             <h5 class="footer-heading text-white">Entreprise</h5>
                             <ul class="list-unstyled footer-links">
                                 <li><a href="#">À propos</a></li>
-                                <li><a href="#">Carrières</a></li>
                                 <li><a href="#">Contact</a></li>
                             </ul>
                         </div>
@@ -224,14 +183,26 @@
                         </div>
                     </div>
                     <hr class="my-5 opacity-10" style="border-color: rgba(255,255,255,0.1);">
-                    <div class="text-center footer-text-light small pb-4">
-                        © 2026 Divided Inc. Tous droits réservés. Réalisé avec passion.
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center footer-text-light small pb-4">
+                        <div class="mb-2 mb-md-0">© 2026 Divided Inc. Tous droits réservés. Réalisé avec passion.</div>
+                        <div class="d-flex gap-3">
+                            <a href="#" class="text-decoration-none footer-link-bottom">Mentions Légales</a>
+                            <a href="#" class="text-decoration-none footer-link-bottom">Politique de Confidentialité</a>
+                        </div>
                     </div>
                 </div>
             </footer>
         </div>
+
+        <div v-else>
+            <div class="container py-5 text-center">
+                <h2 class="mt-5">Dashboard en construction</h2>
+                <button class="btn btn-outline-danger mt-3" @click="isConnected = false">Retour Landing</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../app.js"></script>
 </body>
 </html>
